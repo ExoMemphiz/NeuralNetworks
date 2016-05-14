@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package XOR;
+package XOR.model;
 
+import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -13,9 +15,10 @@ import java.util.Random;
  */
 public class Neuron {
  
-    double activate;    //If all inputs * weights > activate return 
-    double[] weights, inputs;
-    Random r;
+    private boolean recalc = true;
+    private double activate, sigCalculation;    //If all inputs * weights > activate return 
+    private double[] weights, inputs;
+    private Random r;
     
     public Neuron(double[] inputs) {
         r = new Random();
@@ -24,23 +27,36 @@ public class Neuron {
         for (int i = 0; i < inputs.length; i++) {
             weights[i] = range(-1, 1);
         }
+        activate = range(0, 1);
         weights[this.inputs.length - 1] = 1;   //Bias
     }
     
-    void updateInputs(double[] inputs) {
+    public void updateInputs(double[] inputs) {
         this.inputs = inputs;
+        recalc = true;
     }
     
-    void setWeight(int index, double value) {
+    public void setWeight(int index, double value) {
         weights[index] = value;
+    }
+    
+    public void adjustWeight(int index, double diff) {
+        weights[index] += diff;
     }
     
     private double range(double rangeMin, double rangeMax) {
         return rangeMin + (rangeMax - rangeMin) * r.nextDouble();
     }
     
-    public double activate() {
-        return sigmoid(calculateInputs());
+    public double calculateOutput() {
+        if (recalc) {
+            sigCalculation = sigmoid(calculateInputs());
+            recalc = false;
+        }
+        if (sigCalculation >= activate) {
+            return 1;
+        }
+        return 0;
     }
     
     private double calculateInputs() {
@@ -53,6 +69,14 @@ public class Neuron {
     
     private double sigmoid(double x) {
         return 1 / (1 + Math.exp(-x));
+    }
+    
+    public void printNeuron() {
+        DecimalFormat format = new DecimalFormat("#.###");
+        System.out.println("[Inputs: " + Arrays.toString(inputs) + 
+                           ", activate Threshhold: " + format.format(activate) + 
+                           ", current output: " + calculateOutput() + 
+                           ", weights: " + Arrays.toString(weights) + "]");
     }
     
 }
