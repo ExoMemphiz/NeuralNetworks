@@ -15,10 +15,10 @@ public abstract class GeneticAlgorithm {
  
     int population = 20;
     
-    int layers, inputs, neuronsPerLayer, outputs, passableScore;
-    NeuralNetwork[] networkPopulation;
-    Test[] tests;
-    NeuralNetwork bestNeural;
+    private int layers, inputs, neuronsPerLayer, outputs, passableScore;
+    private NeuralNetwork[] networkPopulation;
+    private Test[] tests;
+    private NeuralNetwork bestNeural;
 
     public GeneticAlgorithm(Test[] tests, int layers, int inputs, int neuronsPerLayer, int outputs, int passableScore) {
         this.layers = layers;
@@ -42,6 +42,10 @@ public abstract class GeneticAlgorithm {
         }
         //else reproduce with the top X amount
         
+    }
+
+    public NeuralNetwork[] getNetworkPopulation() {
+        return networkPopulation;
     }
     
     public void initPopulation() {
